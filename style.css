@@ -3,7 +3,7 @@
   display: grid;
   /* grid-template-columns is is dynamically applied */
   grid-auto-rows: auto; /* Adjust row height as needed */
-  gap: 10px; /* Adjust gap between grid items */
+  gap: 0px; /* Adjust gap between grid items */
   
   height: 50%; /* Make grid container height cover the viewport height */
   width: 50%;
