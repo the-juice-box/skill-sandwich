@@ -8,27 +8,9 @@ fetch("graph.json")
         return;
     }
 
-    /* This doesn't work
-    const numColumns = graph[0].length;
-
-    // prints '3'
-    console.log("Num columns " + numColumns);
-
-    // this doesn't work
-    graphContainer.style.gridTemplateColumns = "repeat(${numColumns}, 1fr)";
-
-    // hmmm...
-    const actualStyle = window.getComputedStyle(graphContainer);
-
-    // prints 'none'
-    console.log("Grid template columns... " + actualStyle.getPropertyValue('grid-template-columns'));
-    */
-
-    // keep in mind that each number of columns is its own css class
     const numColumns = graph[0].length;
     console.log("Num columns " + numColumns);
-
-    graphContainer.classList.add('columns-' + numColumns);
+    graphContainer.style.gridTemplateColumns = '1fr '.repeat(numColumns);
 
     for (let i = 0; i < graph.length; i++) {
         for (let j = 0; j < graph[i].length; j++) {
