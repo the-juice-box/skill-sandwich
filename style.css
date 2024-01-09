@@ -51,3 +51,7 @@ img {
   line-height:1px;
   position: absolute;
 }
+
+#info-pane {
+  overflow-wrap: break-word;
+}

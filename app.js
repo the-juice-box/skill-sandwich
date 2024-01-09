@@ -1,5 +1,10 @@
-// dependency (?)
+// dependency
+import graph from './graph.json' assert { type: 'json' };
+import {MarkdownBlock, MarkdownSpan, MarkdownElement} from "https://md-block.verou.me/md-block.js";
+
 const graphContainer = document.getElementById("graph-container");
+const graphEdgesContainer = document.getElementById("graph-edges");
+const infoPane = document.getElementById("info-pane");
 
 // unpack json file
 function getRowIndex(graph, nodeRowIndex, nodeName) {
@@ -66,33 +71,30 @@ function drawConnectingLine(div1, div2) {
 
   // render the line!!!
   const lineElement = document.createElement("div");
-  lineElement.innerHTML =
-    "<div class='graph-edge' style='left:" +
-    cx +
-    "px; top:" +
-    cy +
-    "px; width:" +
-    length +
-    "px; -moz-transform:rotate(" +
-    angle +
-    "deg); -webkit-transform:rotate(" +
-    angle +
-    "deg); -o-transform:rotate(" +
-    angle +
-    "deg); -ms-transform:rotate(" +
-    angle +
-    "deg); transform:rotate(" +
-    angle +
-    "deg);'/>";
-  graphContainer.appendChild(lineElement);
+  lineElement.classList.add('graph-edge');
+  lineElement.style.left = cx + "px";
+  lineElement.style.top = cy + "px";
+  lineElement.style.width = length + "px";
+  lineElement.style.transform = `rotate(${angle}deg)`;
+  graphEdgesContainer.appendChild(lineElement);
 }
 
-function renderGraph(contents) {
-  console.log("read " + contents);
+function renderTechnologyInfo(nodeName) {
+  /* makes the info pane display a technology's blurb */
+  if (graph.blurbs[nodeName]) {
+    
+    infoPane.innerHTML = `<md-block src='${graph.blurbs[nodeName]}'></md-block>`
+    return;
+  }
 
-  // variables
-  const graph = JSON.parse(contents); // nodeName --> [ nodeDependencyName ]
-  const nodeRowIndex = getRows(graph); // nodeName --> int rowIndex
+  // default
+  infoPane.innerHTML = nodeName;
+}
+function renderGraph() {
+  /* draws the tech tree */
+
+  // unpack the graph
+  const nodeRowIndex = getRows(graph.dependencies); // nodeName --> int rowIndex
   const graphRows = []; // rowIndex --> [ nodeName ]
   const nodeDiv = {}; // nodeName --> <div>
 
@@ -114,36 +116,36 @@ function renderGraph(contents) {
     for (let j = 0; j < graphRows[i].length; j++) {
       // var
       const nodeName = graphRows[i][j];
-      const nodeDependencies = graph[nodeName];
+      const nodeDependencies = graph.dependencies[nodeName];
 
       // draw graph node
-      console.log("RENDER " + nodeName);
       const nodeElement = document.createElement("div");
       nodeElement.innerHTML = nodeName;
       nodeElement.classList.add("graph-node");
       rowDiv.appendChild(nodeElement);
       nodeDiv[nodeName] = nodeElement;
 
+      // display info about this technology upon click
+      nodeElement.addEventListener('click', function() {
+        renderTechnologyInfo(nodeName)
+      })
+
+      // draw node's icon, if it exists
+      if (graph.icons[nodeName]) {
+        const iconElement = document.createElement("img");
+        iconElement.innerHTML = `src='${graph.icons[nodeName]}'`;
+        nodeElement.appendChild(iconElement);
+      }
+
       // draw edges
-      console.log("  dependencies: " + JSON.stringify(graph[nodeName]));
       for (let k = 0; k < nodeDependencies.length; k++) {
         const dependencyNodeName = nodeDependencies[k];
         const dependencyNodeElement = nodeDiv[dependencyNodeName];
 
-        console.log("EDGE " + nodeName + " - " + dependencyNodeName);
         drawConnectingLine(nodeElement, dependencyNodeElement);
       }
     }
   }
 }
-function main() {
-  // Fetch the JSON file
-  fetch("graph.json")
-    .then((response) => response.text())
-    .then(renderGraph)
-    .catch((error) => {
-      console.log("Error fetching data:", error);
-    });
-}
 
-main();
+renderGraph();

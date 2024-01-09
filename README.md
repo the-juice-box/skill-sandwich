@@ -4,7 +4,7 @@
 * Draw technology icons
 * ~~Draw lines between dependencies~~ `Jan 9, 2024`;
 * ~~Render tech tree from a markdown or plaintext document~~ `Jan 9, 2024`;
-* Render technology info when you click an icon
+* ~~Render technology info when you click an icon~~ `Jan 9, 2024`;
 * Make icons visible as you scroll down, hide them when you scroll up
 * Notches indicate scroll progress
 * Button to scroll to the bottom
