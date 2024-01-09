@@ -21,3 +21,33 @@ img {
     max-height: 100%;
     src: "https://i.kym-cdn.com/entries/icons/facebook/000/026/692/epic.jpg";
 }
+
+#graph-container {
+  height: 50%;
+  width: 50%;
+}
+
+.graph-row {
+  height: 50px;
+  margin: 30px;
+  display: flex;
+}
+
+.graph-node {
+  height: 50px;
+  width: 50px;
+  background: #ff0000;
+  text-align: center;
+  margin: 15px;
+  color: white;
+}
+
+.graph-edge {
+  height: 5px;
+  background: #000000;
+  z-index: -100;
+  padding: 0px;
+  margin: 0px;
+  line-height:1px;
+  position: absolute;
+}
