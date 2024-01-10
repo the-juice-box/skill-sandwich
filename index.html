@@ -10,8 +10,27 @@
 <body>
     <div class="container" style="display: flex;">
         <div id="info-pane" style="width: 40vw;">
-            <h1>Technology #13905</h1>
-            <p>Lorem Ipsum</p>
+            <div class="node-info" id = "default-node-info">
+                <h1>This node has no information!</h1>
+                <p>I'm so sorry.</p>
+            </div>
+            <div class="node-info" id = "a">
+                <h1>This is the first node!</h1>
+                <p>Lorem Ipsum</p>
+            </div>
+            <div class="node-info" id = "b">
+                <h1>This is the second node!</h1>
+                <p>Lorem Ipsum</p>
+            </div>
+            <div class="node-info" id = "c">
+                <h1>This is the third node!</h1>
+                <p>Lorem Ipsum</p>
+            </div>
+            <div id="info-pane-footer">
+                <button id="prev-btn">Previous</button>
+                <button id="skip-btn">Skip to end</button>
+                <button id="next-btn">Next</button>
+            </div>
         </div>
         <div id="graph-container">
            <!--Elements are dynamically added-->

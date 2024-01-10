@@ -1,10 +1,24 @@
 // dependency
-import graph from './graph.json' assert { type: 'json' };
-import {MarkdownBlock, MarkdownSpan, MarkdownElement} from "https://md-block.verou.me/md-block.js";
+import graph from "./graph.json" assert { type: "json" };
+//import {MarkdownBlock, MarkdownSpan, MarkdownElement} from "https://md-block.verou.me/md-block.js";
 
 const graphContainer = document.getElementById("graph-container");
 const graphEdgesContainer = document.getElementById("graph-edges");
 const infoPane = document.getElementById("info-pane");
+const defaultNodeInfoElement = document.getElementById("default-node-info");
+const nextButton = document.getElementById("next-btn");
+const prevButton = document.getElementById("prev-btn");
+const skipButton = document.getElementById("skip-btn");
+
+// var
+var nodeRowIndex;
+const graphRows = []; // rowIndex --> [ nodeName ]
+const nodeElements = {}; // nodeName --> <div>
+const nodeEdges = {}; // nodeName --> { dependencyNodeName: <div> } (the edges)
+
+const nodeOrder = []; // i --> nodeName
+var selectedNodeIndex = -1;
+var prevNodeInfoElement = defaultNodeInfoElement;
 
 // unpack json file
 function getRowIndex(graph, nodeRowIndex, nodeName) {
@@ -54,10 +68,18 @@ function getOffset(el) {
     height: rect.height || el.offsetHeight,
   };
 }
-function drawConnectingLine(div1, div2) {
+function drawConnectingLine(nodeName, dependencyNodeName) {
+  // elements
+  const edgeName = nodeName + "-" + dependencyNodeName;
+  const nodeElement = nodeElements[nodeName];
+  const dependencyNodeElement = nodeElements[dependencyNodeName];
+  if (!nodeEdges[nodeName]) {
+    nodeEdges[nodeName] = {};
+  }
+
   // div element centers
-  const off1 = getOffset(div1);
-  const off2 = getOffset(div2);
+  const off1 = getOffset(nodeElement);
+  const off2 = getOffset(dependencyNodeElement);
   const x1 = off1.left + 0.5 * off1.width;
   const y1 = off1.top + 0.5 * off1.height;
   const x2 = off2.left + 0.5 * off2.width;
@@ -69,9 +91,18 @@ function drawConnectingLine(div1, div2) {
   const cy = (y1 + y2) / 2; // - thickness / 2;
   const angle = Math.atan2(y1 - y2, x1 - x2) * (180 / Math.PI);
 
-  // render the line!!!
-  const lineElement = document.createElement("div");
-  lineElement.classList.add('graph-edge');
+  // get line or initialize it
+  var lineElement = nodeEdges[nodeName][dependencyNodeName];
+  if (!lineElement) {
+    lineElement = document.createElement("div");
+    lineElement.classList.add("graph-edge");
+    lineElement.id = edgeName;
+
+    // save it to nodeEdges for later
+    nodeEdges[nodeName][dependencyNodeName] = lineElement;
+  }
+
+  // update line's transform
   lineElement.style.left = cx + "px";
   lineElement.style.top = cy + "px";
   lineElement.style.width = length + "px";
@@ -79,26 +110,77 @@ function drawConnectingLine(div1, div2) {
   graphEdgesContainer.appendChild(lineElement);
 }
 
-function renderTechnologyInfo(nodeName) {
-  /* makes the info pane display a technology's blurb */
-  if (graph.blurbs[nodeName]) {
-    
-    infoPane.innerHTML = `<md-block src='${graph.blurbs[nodeName]}'></md-block>`
+// info-pane & revealing new nodes
+function renderNodeInfo() {
+  /* makes the info pane display a node's blurb */
+  /* node infos are html elements in the info-pane */
+
+  // make previous node info go away
+  if (prevNodeInfoElement) {
+    prevNodeInfoElement.style.display = "none";
+  }
+
+  // look up new node info element
+  const nodeName = nodeOrder[selectedNodeIndex];
+  const newNodeInfoElement =
+    document.getElementById(nodeName) || defaultNodeInfoElement;
+  newNodeInfoElement.style.display = "contents";
+
+  // save it for later
+  prevNodeInfoElement = newNodeInfoElement;
+}
+function selectNode(newNodeIndex) {
+  /* change which node is "selected" */
+
+  if (typeof(newNodeIndex) === "string") {
+    for (let i = 0; i < nodeOrder.length; i++) {
+      if (nodeOrder[i] === newNodeIndex) {
+        newNodeIndex = i;
+        break;
+      }
+    }
+    if (typeof(newNodeIndex) === "string") {
+      return false;
+    }
+  }
+
+  if (newNodeIndex < 0 || newNodeIndex >= nodeOrder.length) {
+    return false;
+  }
+
+  selectedNodeIndex = newNodeIndex;
+  renderNodeInfo();
+
+  return true;
+}
+function revealNextNode() {
+  // increment selectedNodeIndex; don't do anything if there is no next
+  const success = selectNode(selectedNodeIndex + 1);
+  if (!success) {
     return;
   }
 
-  // default
-  infoPane.innerHTML = nodeName;
+  // make the next node visible
+  const nodeName = nodeOrder[selectedNodeIndex];
+  const nodeElement = nodeElements[nodeName];
+  nodeElement.style.visibility = "visible";
+
+  // make its edges visible
+  for (var dependencyNodeName in nodeEdges[nodeName]) {
+    const edgeElement = nodeEdges[nodeName][dependencyNodeName];
+    edgeElement.style.visibility = "visible";
+  }
 }
+
 function renderGraph() {
   /* draws the tech tree */
 
-  // unpack the graph
-  const nodeRowIndex = getRows(graph.dependencies); // nodeName --> int rowIndex
-  const graphRows = []; // rowIndex --> [ nodeName ]
-  const nodeDiv = {}; // nodeName --> <div>
+  // unpack the graph json file
+  nodeRowIndex = getRows(graph.dependencies); // nodeName --> int rowIndex
 
+  // initialize 2d array of nodes
   for (var nodeName in nodeRowIndex) {
+    // initialize 2d array of nodes, in order
     const i = nodeRowIndex[nodeName];
     if (graphRows[i] === undefined) {
       graphRows[i] = [];
@@ -106,7 +188,14 @@ function renderGraph() {
     graphRows[i][graphRows[i].length] = nodeName;
   }
 
-  // render the graph
+  // initialize 1d array of nodes, in order of appearance in 2d array
+  for (let i = 0; i < graphRows.length; i++) {
+    for (let j = 0; j < graphRows[i].length; j++) {
+      nodeOrder[nodeOrder.length] = graphRows[i][j];
+    }
+  }
+
+  // render the nodes in the graph
   for (let i = 0; i < graphRows.length; i++) {
     // draw graph row
     const rowDiv = document.createElement("div");
@@ -116,19 +205,18 @@ function renderGraph() {
     for (let j = 0; j < graphRows[i].length; j++) {
       // var
       const nodeName = graphRows[i][j];
-      const nodeDependencies = graph.dependencies[nodeName];
 
       // draw graph node
       const nodeElement = document.createElement("div");
       nodeElement.innerHTML = nodeName;
       nodeElement.classList.add("graph-node");
       rowDiv.appendChild(nodeElement);
-      nodeDiv[nodeName] = nodeElement;
+      nodeElements[nodeName] = nodeElement;
 
       // display info about this technology upon click
-      nodeElement.addEventListener('click', function() {
-        renderTechnologyInfo(nodeName)
-      })
+      nodeElement.addEventListener("click", function () {
+        selectNode(nodeName);
+      });
 
       // draw node's icon, if it exists
       if (graph.icons[nodeName]) {
@@ -136,16 +224,59 @@ function renderGraph() {
         iconElement.innerHTML = `src='${graph.icons[nodeName]}'`;
         nodeElement.appendChild(iconElement);
       }
+    }
+  }
 
-      // draw edges
-      for (let k = 0; k < nodeDependencies.length; k++) {
-        const dependencyNodeName = nodeDependencies[k];
-        const dependencyNodeElement = nodeDiv[dependencyNodeName];
+  // render the edges between graph nodes
+  function renderEdges() {
+    graphEdgesContainer.innerHTML = "";
+    for (var nodeName in graph.dependencies) {
+      if (!graph.dependencies[nodeName]) {
+        continue;
+      }
 
-        drawConnectingLine(nodeElement, dependencyNodeElement);
+      for (let i = 0; i < graph.dependencies[nodeName].length; i++) {
+        const dependencyNodeName = graph.dependencies[nodeName][i];
+        drawConnectingLine(nodeName, dependencyNodeName);
       }
     }
   }
+  window.addEventListener("resize", renderEdges);
+  renderEdges();
+
+  // reveal as you scroll
+  var scrollCounter = 0;
+  function a() {}
+  document.body.addEventListener("wheel", function (e) {
+    // only while scrolling down
+    if (e.deltaY <= 0) {
+      return;
+    }
+
+    // debounce
+    scrollCounter += e.deltaY;
+    if (scrollCounter <= 100) {
+      return;
+    }
+    scrollCounter = 0;
+
+    // do the thing
+    revealNextNode();
+  });
+
+  // reveal the first node
+  revealNextNode();
+
+  // buttons
+  nextButton.addEventListener("click", revealNextNode);
+  prevButton.addEventListener("click", function () {
+    selectNode(selectedNodeIndex - 1);
+  });
+  skipButton.addEventListener("click", function () {
+    while (selectedNodeIndex < nodeOrder.length - 1) {
+      revealNextNode();
+    }
+  });
 }
 
 renderGraph();

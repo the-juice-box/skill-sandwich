@@ -2,7 +2,7 @@
   "dependencies": {
     "a": [],
     "b": ["a" ],
-    "c": ["a", "b"],
+    "c": ["b"],
     "d": ["c"],
     "e": ["a"],
     "f": ["a"],
@@ -15,8 +15,5 @@
   },
   "icons": {
     "a": "./icons/test.svg"
-  },
-  "blurbs": {
-    "a": "./blurbs/test.md"
   }
 }

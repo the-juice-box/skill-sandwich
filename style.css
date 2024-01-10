@@ -29,7 +29,7 @@ img {
 
 .graph-row {
   height: 50px;
-  margin: 30px;
+  margin: 50px;
   display: flex;
 }
 
@@ -40,6 +40,7 @@ img {
   text-align: center;
   margin: 15px;
   color: white;
+  visibility: hidden;
 }
 
 .graph-edge {
@@ -50,8 +51,18 @@ img {
   margin: 0px;
   line-height:1px;
   position: absolute;
+  visibility: hidden;
 }
 
 #info-pane {
   overflow-wrap: break-word;
+}
+
+.node-info {
+  display: none;
+}
+
+#info-pane-footer {
+  position: absolute;
+  bottom: 10px;
 }
