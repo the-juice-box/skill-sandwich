@@ -32,13 +32,31 @@
 }
 
 #info-pane {
-  overflow-wrap: break-word;
   width: 40vw;
+}
+#info-pane-content {
+  overflow-wrap: break-word;
+  height: calc(100vh - 50px);
+  overflow-y: scroll;
 }
 #info-pane-footer {
   position: absolute;
   bottom: 10px;
+  height: 30px;
 }
 .node-info {
   display: none;
+  width: 100%;
+}
+.highlighted-level {
+  background: #ff0000;
+}
+.sticky-header {
+  width: calc(40% - 15px);
+  background: #ffffff;
+  position: absolute;
+  top: 0px;
+}
+.sticky-content {
+  padding-top: 120px;
 }

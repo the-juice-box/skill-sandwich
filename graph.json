@@ -1,19 +1,31 @@
 {
   "dependencies": {
-    "a": [],
-    "b": ["a" ],
-    "c": ["b"],
-    "d": ["c"],
-    "e": ["a"],
-    "f": ["a"],
-    "g": ["e", "f"],
-    "h": ["g", "b"],
-    "i": ["h"],
-    "j": ["g"],
-    "k": ["i"],
-    "l": ["i"]
+    "A/level-one": [],
+    "A/level-two": ["A/level-one"],
+    "A/level-three": ["A/level-two"],
+    "A/level-four": ["A/level-three"],
+    "A/level-five": ["B/level-three"],
+    "A/level-six": ["A/level-five"],
+    "B/level-one": ["A/level-one"],
+    "B/level-two": ["B/level-one", "C/level-one"],
+    "B/level-three": ["A/level-two", "B/level-two"],
+    "C/level-one": ["A/level-one"],
+    "C/level-two": ["B/level-two"],
+    "C/level-three": ["A/level-five"]
   },
   "icons": {
-    "a": "./icons/test.svg"
+    "A": "",
+    "B": "",
+    "C": "",
+
+    "A/level-one": "",
+    "A/level-two": "",
+    "A/level-three": "",
+    "B/level-one": "",
+    "B/level-two": "",
+    "B/level-three": "",
+    "C/level-one": "",
+    "C/level-two": "",
+    "C/level-three": ""
   }
 }

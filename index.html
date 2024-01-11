@@ -10,25 +10,82 @@
 <body>
     <div id="container">
         <div id="info-pane">
-            <!--This element shows up if no info is defined for a node-->
-            <div class="node-info" id = "default-node-info">
-                <h1>This node has no information!</h1>
-                <p>I'm so sorry.</p>
+            <!--Content-->
+            <div id="info-pane-content">
+                <!--This element shows up if no info is defined for a node-->
+                <div class="node-info" id = "default-node-info">
+                    <h1>This node has no information!</h1>
+                    <p>I'm so sorry.</p>
+                </div>
+
+                <!--To render info about a node, make a new section with same id as node's name-->
+                <div class="node-info" id = "A">
+                    <div class="sticky-header">
+                        <h1>Technology A</h1>
+                        <p>Lorem Ipsum</p>
+                    </div>
+                    <div class="sticky-content">
+                        <div class="level-info" id="A/level-one">
+                            <h3>Level One</h3>
+                            <p>Yaaaa</p>
+                        </div>
+                        <div class="level-info" id="A/level-two">
+                            <h3>Level Two</h3>
+                            <p>Yoeueoe</p>
+                        </div>
+                        <div class="level-info" id="A/level-three">
+                            <h3>Level Three</h3>
+                            <p>Yuuaauu</p>
+                        </div>
+                        <div class="level-info" id="A/level-four">
+                            <h3>Level Four</h3>
+                            <p>Youargg</p>
+                        </div>
+                        <div class="level-info" id="A/level-five">
+                            <h3>Level Five</h3>
+                            <p>Grump</p>
+                        </div>
+                        <div class="level-info" id="A/level-six">
+                            <h3>Level Six</h3>
+                            <p>Glock</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="node-info" id = "B">
+                    <h1>Technology B</h1>
+                    <p>Lorem Ipsum</p>
+                    <div class="level-info" id="B/level-one">
+                        <h3>Level One</h3>
+                        <p>dafhdfh</p>
+                    </div>
+                    <div class="level-info" id="B/level-two">
+                        <h3>Level Two</h3>
+                        <p>adfhdfhdfh</p>
+                    </div>
+                    <div class="level-info" id="B/level-three">
+                        <h3>Level Three</h3>
+                        <p>adfhdfh</p>
+                    </div>
+                </div>
+                <div class="node-info" id = "C">
+                    <h1>Technology C</h1>
+                    <p>Lorem Ipsum</p>
+                    <div class="level-info" id="C/level-one">
+                        <h3>Level One</h3>
+                        <p>dafhdfh</p>
+                    </div>
+                    <div class="level-info" id="C/level-two">
+                        <h3>Level Two</h3>
+                        <p>adfhdfhdfh</p>
+                    </div>
+                    <div class="level-info" id="C/level-three">
+                        <h3>Level Three</h3>
+                        <p>adfhdfh</p>
+                    </div>
+                </div>
             </div>
 
-            <!--To render info about a node, make a new section with same id as node's name-->
-            <div class="node-info" id = "a">
-                <h1>This is the first node!</h1>
-                <p>Lorem Ipsum</p>
-            </div>
-            <div class="node-info" id = "b">
-                <h1>This is the second node!</h1>
-                <p>Lorem Ipsum</p>
-            </div>
-            <div class="node-info" id = "c">
-                <h1>This is the third node!</h1>
-                <p>Lorem Ipsum</p>
-            </div>
+            <!--Buttons-->
             <div id="info-pane-footer">
                 <button id="prev-btn">Previous</button>
                 <button id="skip-btn">Skip to end</button>

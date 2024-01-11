@@ -4,8 +4,8 @@ import graph from "./graph.json" assert { type: "json" };
 
 const graphContainer = document.getElementById("graph-container");
 const graphEdgesContainer = document.getElementById("graph-edges");
-const infoPane = document.getElementById("info-pane");
 const defaultNodeInfoElement = document.getElementById("default-node-info");
+const infoPane = document.getElementById("info-pane");
 const nextButton = document.getElementById("next-btn");
 const prevButton = document.getElementById("prev-btn");
 const skipButton = document.getElementById("skip-btn");
@@ -19,6 +19,7 @@ const nodeEdges = {}; // nodeName --> { dependencyNodeName: <div> } (the edges)
 const nodeOrder = []; // i --> nodeName
 var selectedNodeIndex = -1;
 var prevNodeInfoElement = defaultNodeInfoElement;
+var prevLevelInfoElement = null;
 
 // unpack json file
 function getRowIndex(graph, nodeRowIndex, nodeName) {
@@ -56,6 +57,9 @@ function getRows(graph) {
     getRowIndex(graph, nodeRowIndex, nodeName);
   }
   return nodeRowIndex;
+}
+function getNamespace(nodeName) {
+  return nodeName.split("/")[0];
 }
 
 // rendering edges
@@ -120,14 +124,24 @@ function renderNodeInfo() {
     prevNodeInfoElement.style.display = "none";
   }
 
-  // look up new node info element
+  // display new node info
   const nodeName = nodeOrder[selectedNodeIndex];
+  const namespace = getNamespace(nodeName) || nodeName;
   const newNodeInfoElement =
-    document.getElementById(nodeName) || defaultNodeInfoElement;
+    document.getElementById(namespace) || defaultNodeInfoElement;
   newNodeInfoElement.style.display = "contents";
+  prevNodeInfoElement = newNodeInfoElement;  // save it for later
 
-  // save it for later
-  prevNodeInfoElement = newNodeInfoElement;
+  // highlight the specific level's section
+  if (prevLevelInfoElement) {
+    prevLevelInfoElement.classList.remove("highlighted-level");
+  }
+  const newLevelInfoElement = document.getElementById(nodeName);
+  if (newLevelInfoElement) {
+    newLevelInfoElement.classList.add("highlighted-level");
+    newLevelInfoElement.scrollIntoView();
+  }
+  prevLevelInfoElement = newLevelInfoElement; // save for later
 }
 function selectNode(newNodeIndex) {
   /* change which node is "selected" */
