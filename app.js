@@ -172,6 +172,7 @@ function revealNextNode() {
   }
 }
 
+// main
 function renderGraph() {
   /* draws the tech tree */
 

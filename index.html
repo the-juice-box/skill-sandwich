@@ -8,12 +8,15 @@
     <link rel="stylesheet" href="style.css">
     <script type="module" defer src="app.js"></script>
 <body>
-    <div class="container" style="display: flex;">
-        <div id="info-pane" style="width: 40vw;">
+    <div id="container">
+        <div id="info-pane">
+            <!--This element shows up if no info is defined for a node-->
             <div class="node-info" id = "default-node-info">
                 <h1>This node has no information!</h1>
                 <p>I'm so sorry.</p>
             </div>
+
+            <!--To render info about a node, make a new section with same id as node's name-->
             <div class="node-info" id = "a">
                 <h1>This is the first node!</h1>
                 <p>Lorem Ipsum</p>

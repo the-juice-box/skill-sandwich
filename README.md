@@ -12,3 +12,5 @@
 * Style the fonts and background colors; experiment with a background image
 * Display a technology's level / if it's locked, and requirements for unlocking next level
 * Display a technology's progression, including the next level and its unlock requirements, and maybe also ideas
+* Flip the info pane & graph for screen resolutions where y > x `research`
+* question marks
