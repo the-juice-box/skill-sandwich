@@ -24,3 +24,9 @@ body {
   justify-content: space-evenly;
   align-items: center;
 }
+.tech-tree-edge {
+  height: 5px;
+  background: #000000;
+  z-index: -100;
+  position: absolute;
+}
