@@ -27,5 +27,8 @@
     "C/level-one": "",
     "C/level-two": "",
     "C/level-three": ""
+  },
+  "blurbs": {
+    "A/level-one": "<b>A/level-one</b><p>This is the <i>first</i> tech.</p>"
   }
 }
