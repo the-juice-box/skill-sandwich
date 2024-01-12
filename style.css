@@ -1,62 +1,26 @@
-#container {
+body {
   display: flex;
-}
+  flex-direction: column;
+  justify-content:  space-evenly;
 
-#graph-container {
-  height: 50%;
-  width: 50%;
+  width: 120%;
 }
-.graph-row {
-  height: 50px;
-  margin: 50px;
-  display: flex;
-}
-.graph-node {
-  height: 50px;
-  width: 50px;
-  background: #ff0000;
-  text-align: center;
-  margin: 15px;
-  color: white;
-  visibility: hidden;
-}
-.graph-edge {
-  height: 5px;
-  background: #000000;
-  z-index: -100;
-  padding: 0px;
-  margin: 0px;
-  line-height:1px;
-  position: absolute;
-  visibility: hidden;
-}
-
-#info-pane {
-  width: 40vw;
-}
-#info-pane-content {
-  overflow-wrap: break-word;
-  height: calc(100vh - 50px);
-  overflow-y: scroll;
-}
-#info-pane-footer {
-  position: absolute;
-  bottom: 10px;
-  height: 30px;
-}
-.node-info {
-  display: none;
+.tech-tree-row {
   width: 100%;
+  height: 200px;
+  margin-bottom: 250px;  
+  margin-top: 150px;
+
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
-.highlighted-level {
-  background: #ff0000;
-}
-.sticky-header {
-  width: calc(40% - 15px);
-  background: #ffffff;
-  position: absolute;
-  top: 0px;
-}
-.sticky-content {
-  padding-top: 120px;
+.tech-tree-node {
+  width: 400px;
+  height: 200px;
+  margin: 100px;
+
+  display: flex; 
+  justify-content: space-evenly;
+  align-items: center;
 }
