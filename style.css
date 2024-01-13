@@ -1,9 +1,9 @@
 .tech-tree {
   display: flex;
   flex-direction: column;
-  /*justify-content: space-evenly;*/
-  width: 5000px;
-  height: 5000px;
+  justify-content: space-evenly;
+  width: 6000px;
+  height: 6000px;
 }
 .tech-tree-row {
   width: auto;
