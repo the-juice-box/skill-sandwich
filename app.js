@@ -98,8 +98,6 @@ function generateTechTree(graph) {
       nodeBlurb.innerHTML = graph.blurbs[nodeName] || nodeName;
       nodeBlurb.classList.add("tech-tree-blurb");
       nodeDiv.appendChild(nodeBlurb);
-
-      console.log(nodeName);
     }
   }
 
