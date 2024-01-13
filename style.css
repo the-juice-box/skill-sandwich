@@ -25,7 +25,7 @@
   align-items: center;
 }
 .tech-tree-edge {
-  height: 5px;
+  height: 2px;
   background: #000000;
   z-index: -100;
   position: absolute;

@@ -4,6 +4,12 @@ const techTreeEdgesContainer = document.querySelector(".tech-tree-edges");
 const startButton = document.querySelector(".start-btn");
 
 const DEFAULT_ICON = "assets/default-icon.png";
+const LOCK_ICON = "assets/lock.png";
+const UNKNOWN_ICON = "assets/question-mark.png";
+
+const UNKNOWN_INDEX = 2; // completionIndex at which nodes are marked unknown instead of just locked
+// completionIndex=0 for nodes that are completed; completionIndex=1 for nodes that have a completed dependency; etc etc
+const BIG_NUMBER = 10 ^ 6; // completion index can't be bigger than this... idk how javascript works yet lol
 
 function unpackGraphDependencies(dependencies) {
   // @return: Array rowIndexToNodes (int rowIndex --> [ string nodeName ])
@@ -55,6 +61,46 @@ function unpackGraphDependencies(dependencies) {
 
   return [rowIndexToNodes, nodeToRowIndex];
 }
+
+function unpackGraphCompletion(techTreeUpgrades) {
+  const nodeToCompletionIndex = {};
+
+  function getCompletionIndex(nodeName) {
+    if (nodeToCompletionIndex[nodeName]) {
+      return nodeToCompletionIndex[nodeName];
+    }
+
+    const upgrade = techTreeUpgrades[nodeName];
+    if (upgrade.completed) {
+      nodeToCompletionIndex[nodeName] = 0;
+      return 0;
+    }
+
+    const dependencies = upgrade.dependencies;
+    if (dependencies.length <= 0) {
+      nodeToCompletionIndex[nodeName] = BIG_NUMBER;
+      return BIG_NUMBER;
+    }
+
+    var completionIndex = BIG_NUMBER;
+    for (let i = 0; i < dependencies.length; i++) {
+      completionIndex = Math.min(
+        completionIndex,
+        getCompletionIndex(dependencies[i])
+      );
+    }
+    completionIndex = Math.min(completionIndex + 1, BIG_NUMBER);
+
+    nodeToCompletionIndex[nodeName] = completionIndex;
+    return completionIndex;
+  }
+
+  for (var nodeName in techTreeUpgrades) {
+    getCompletionIndex(nodeName);
+  }
+
+  return nodeToCompletionIndex;
+}
 function getOffset(el) {
   var rect = el.getBoundingClientRect();
   return {
@@ -64,7 +110,6 @@ function getOffset(el) {
     height: rect.height || el.offsetHeight,
   };
 }
-
 function generateTechTree(techTreeJson) {
   // @post: generates node/edge html elements per node in the graph
   // @param: Object graph {}
@@ -91,6 +136,7 @@ function generateTechTree(techTreeJson) {
   // turn dependency graph into a set of rows of nodes
   const [rowIndexToNodes, nodeToRowIndex] =
     unpackGraphDependencies(upgradeDependencies);
+  const nodeToCompletionIndex = unpackGraphCompletion(techTreeUpgrades);
   const nodeIcons = {}; // nodeName --> Icon HTML element
   const nodeEdges = {}; // nodeName --> [ edge HTML element ]
 
@@ -104,10 +150,25 @@ function generateTechTree(techTreeJson) {
     for (let j = 0; j < rowIndexToNodes[i].length; j++) {
       // get upgrade data from json
       const nodeName = rowIndexToNodes[i][j];
+      const completionIndex = nodeToCompletionIndex[nodeName];
       const upgrade = techTreeUpgrades[nodeName];
-      const iconImgSrc = upgrade.icon || DEFAULT_ICON;
-      const displayName = upgrade["display-name"] || nodeName;
-      const blurb = upgrade.blurb || "";
+
+      // appearance varies depending on completionIndex
+      var displayedImg;
+      if (completionIndex >= UNKNOWN_INDEX) {
+        displayedImg = UNKNOWN_ICON;
+      } else if (completionIndex >= 1) {
+        displayedImg = LOCK_ICON;
+      } else {
+        displayedImg = upgrade.icon || DEFAULT_ICON;
+      }
+
+      var displayText = "";
+      if (completionIndex < UNKNOWN_INDEX) {
+        const displayName = upgrade["display-name"] || nodeName;
+        const blurb = upgrade.blurb || ""; 
+        displayText = "<h3>" + displayName + "</h3>" + blurb;
+      }
 
       // create node element
       const nodeDiv = document.createElement("div");
@@ -116,14 +177,14 @@ function generateTechTree(techTreeJson) {
 
       // create node icon
       const nodeImg = document.createElement("img");
-      nodeImg.src = iconImgSrc;
+      nodeImg.src = displayedImg;
       nodeImg.classList.add("tech-tree-img");
       nodeDiv.appendChild(nodeImg);
       nodeIcons[nodeName] = nodeImg;
 
       // create node blurb
       const nodeBlurb = document.createElement("div");
-      nodeBlurb.innerHTML = "<h3>" + displayName + "</h3>" + blurb;
+      nodeBlurb.innerHTML = displayText;
       nodeBlurb.classList.add("tech-tree-blurb");
       nodeDiv.appendChild(nodeBlurb);
     }
@@ -189,13 +250,13 @@ function generateTechTree(techTreeJson) {
   onScreenResize();
 
   // support "back to start" button
-  startButton.addEventListener("click", function() {
+  startButton.addEventListener("click", function () {
     const firstNodeName = rowIndexToNodes[0][0];
     const firstNodeIcon = nodeIcons[firstNodeName];
     if (firstNodeIcon) {
       firstNodeIcon.scrollIntoView();
-    }  
-  })
+    }
+  });
 }
 
 generateTechTree(graphJson);

@@ -34,9 +34,9 @@
       "blurb": "Walls prevent players from moving up the tree and can be broken with ornaments"
     },
     "save-checkpoints": {
-        "dependencies": ["first-level"],
-        "display-name": "Save Checkpoints",
-        "blurb": "Players touch a checkpoint to respawn there if they die"
+      "dependencies": ["first-level"],
+      "display-name": "Save Checkpoints",
+      "blurb": "Players touch a checkpoint to respawn there if they die"
     }
   },
   "level-design": {
