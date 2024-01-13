@@ -1,9 +1,12 @@
 body {
+  overflow: scroll;
+}
+.tech-tree {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-
-  /*width: 200%;*/
+  width: 5000px;
+  height: 5000px;
 }
 .tech-tree-row {
   width: auto;
@@ -39,4 +42,14 @@ body {
   background: white;
   padding: 5px;
   flex-grow: 1;
+}
+
+.nav-bar {
+  width: 200px;
+  height: 60px;
+  position: fixed;
+  bottom: 10px;
+  left: calc(50% - 100px);
+
+  background: white;
 }
