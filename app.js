@@ -1,6 +1,8 @@
-import graphJson from "./graph.json" assert { type: "json" };
+import graphJson from "./tech-tree.json" assert { type: "json" };
 const techTreeContainer = document.querySelector(".tech-tree");
 const techTreeEdgesContainer = document.querySelector(".tech-tree-edges");
+
+const DEFAULT_ICON = "assets/default-icon.png";
 
 function unpackGraphDependencies(dependencies) {
   // @return: Array rowIndexToNodes (int rowIndex --> [ string nodeName ])
@@ -62,12 +64,37 @@ function getOffset(el) {
   };
 }
 
-function generateTechTree(graph) {
+function generateTechTree(techTreeJson) {
   // @post: generates node/edge html elements per node in the graph
   // @param: Object graph {}
 
+  // unpack the new format of tech tree json into the old format of graph
+  const upgradeDependencies = {}; // nodeName --> [ dependencyNodeName ];
+  const techTreeUpgrades = {}; // nodeName --> { dependencies, icon, display-name, blurb }
+  for (var categoryName in techTreeJson) {
+    console.log("CATEGORY " + categoryName);
+
+    const upgrades = techTreeJson[categoryName];
+    for (var upgradeName in upgrades) {
+      console.log(upgradeName); 
+
+      const upgrade = upgrades[upgradeName];
+      const thisUpgradesDependencies = upgrade.dependencies;
+      if (!thisUpgradesDependencies) {
+        console.log("AAAHHH");
+        // throw (idk how to do that yet in js ;=;)
+        continue;
+      }
+      
+      // save upgrade to 1d object
+      upgradeDependencies[upgradeName] = thisUpgradesDependencies;
+      techTreeUpgrades[upgradeName] = upgrade;
+    }
+  }
+
+
   const [rowIndexToNodes, nodeToRowIndex] = unpackGraphDependencies(
-    graph.dependencies
+    upgradeDependencies
   );
   const nodeIcons = {}; // nodeName --> Icon HTML element
   const nodeEdges = {}; // nodeName --> [ edge HTML element ]
@@ -80,22 +107,28 @@ function generateTechTree(graph) {
     techTreeContainer.appendChild(rowDiv);
 
     for (let j = 0; j < rowIndexToNodes[i].length; j++) {
-      // create node element
+      // get upgrade data from json
       const nodeName = rowIndexToNodes[i][j];
+      const upgrade = techTreeUpgrades[nodeName];
+      const iconImgSrc = upgrade.icon || DEFAULT_ICON;
+      const displayName = upgrade["display-name"] || nodeName;
+      const blurb = upgrade.blurb || "";
+
+      // create node element
       const nodeDiv = document.createElement("div");
       nodeDiv.classList.add("tech-tree-node");
       rowDiv.appendChild(nodeDiv);
 
       // create node icon
       const nodeImg = document.createElement("img");
-      nodeImg.src = graph.icons[nodeName] || "default-icon.png";
+      nodeImg.src = iconImgSrc;
       nodeImg.classList.add("tech-tree-img");
       nodeDiv.appendChild(nodeImg);
       nodeIcons[nodeName] = nodeImg;
 
       // create node blurb
-      const nodeBlurb = document.createElement("p");
-      nodeBlurb.innerHTML = graph.blurbs[nodeName] || nodeName;
+      const nodeBlurb = document.createElement("div");
+      nodeBlurb.innerHTML = "<h3>" + displayName + "</h3>" + blurb;
       nodeBlurb.classList.add("tech-tree-blurb");
       nodeDiv.appendChild(nodeBlurb);
     }
@@ -146,13 +179,13 @@ function generateTechTree(graph) {
   function onScreenResize() {
     // @post: redraws all edges between nodes
     techTreeEdgesContainer.innerHTML = "";
-    for (var nodeName in graph.dependencies) {
-      if (!graph.dependencies[nodeName]) {
+    for (var nodeName in upgradeDependencies) {
+      if (!upgradeDependencies[nodeName]) {
         continue;
       }
 
-      for (let i = 0; i < graph.dependencies[nodeName].length; i++) {
-        const dependencyNodeName = graph.dependencies[nodeName][i];
+      for (let i = 0; i < upgradeDependencies[nodeName].length; i++) {
+        const dependencyNodeName = upgradeDependencies[nodeName][i];
         drawConnectingLine(nodeName, dependencyNodeName);
       }
     }
