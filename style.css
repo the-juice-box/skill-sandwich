@@ -41,11 +41,12 @@
   flex-grow: 1;
 }
 .nav-bar {
-  width: 400px;
+  width: 500px;
   height: 30px;
   position: fixed;
-  bottom: 10px;
-  left: calc(50% - 200px);
+  bottom: 15px;
+  left: calc(50% - 250px);
 
-  background: white;
+  display: flex;
+  justify-content: center;
 }

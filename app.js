@@ -1,6 +1,7 @@
 import graphJson from "./tech-tree.json" assert { type: "json" };
 const techTreeContainer = document.querySelector(".tech-tree");
 const techTreeEdgesContainer = document.querySelector(".tech-tree-edges");
+const startButton = document.querySelector(".start-btn");
 
 const DEFAULT_ICON = "assets/default-icon.png";
 
@@ -72,30 +73,24 @@ function generateTechTree(techTreeJson) {
   const upgradeDependencies = {}; // nodeName --> [ dependencyNodeName ];
   const techTreeUpgrades = {}; // nodeName --> { dependencies, icon, display-name, blurb }
   for (var categoryName in techTreeJson) {
-    console.log("CATEGORY " + categoryName);
-
     const upgrades = techTreeJson[categoryName];
     for (var upgradeName in upgrades) {
-      console.log(upgradeName); 
-
       const upgrade = upgrades[upgradeName];
       const thisUpgradesDependencies = upgrade.dependencies;
       if (!thisUpgradesDependencies) {
-        console.log("AAAHHH");
         // throw (idk how to do that yet in js ;=;)
         continue;
       }
-      
+
       // save upgrade to 1d object
       upgradeDependencies[upgradeName] = thisUpgradesDependencies;
       techTreeUpgrades[upgradeName] = upgrade;
     }
   }
 
-
-  const [rowIndexToNodes, nodeToRowIndex] = unpackGraphDependencies(
-    upgradeDependencies
-  );
+  // turn dependency graph into a set of rows of nodes
+  const [rowIndexToNodes, nodeToRowIndex] =
+    unpackGraphDependencies(upgradeDependencies);
   const nodeIcons = {}; // nodeName --> Icon HTML element
   const nodeEdges = {}; // nodeName --> [ edge HTML element ]
 
@@ -143,7 +138,7 @@ function generateTechTree(techTreeJson) {
     if (!nodeEdges[nodeName]) {
       nodeEdges[nodeName] = {};
     }
-  
+
     // div element centers
     const off1 = getOffset(nodeElement);
     const off2 = getOffset(dependencyNodeElement);
@@ -151,24 +146,24 @@ function generateTechTree(techTreeJson) {
     const y1 = off1.top + 0.5 * off1.height;
     const x2 = off2.left + 0.5 * off2.width;
     const y2 = off2.top + 0.5 * off2.height;
-  
+
     // line geometry
     const length = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     const cx = (x1 + x2) / 2 - length / 2;
     const cy = (y1 + y2) / 2; // - thickness / 2;
     const angle = Math.atan2(y1 - y2, x1 - x2) * (180 / Math.PI);
-  
+
     // get line or initialize it
     var lineElement = nodeEdges[nodeName][dependencyNodeName];
     if (!lineElement) {
       lineElement = document.createElement("div");
       lineElement.classList.add("tech-tree-edge");
       lineElement.id = edgeName;
-  
+
       // save it to nodeEdges for later
       nodeEdges[nodeName][dependencyNodeName] = lineElement;
     }
-  
+
     // update line's transform
     lineElement.style.left = cx + "px";
     lineElement.style.top = cy + "px";
@@ -192,6 +187,15 @@ function generateTechTree(techTreeJson) {
   }
   window.addEventListener("resize", onScreenResize);
   onScreenResize();
+
+  // support "back to start" button
+  startButton.addEventListener("click", function() {
+    const firstNodeName = rowIndexToNodes[0][0];
+    const firstNodeIcon = nodeIcons[firstNodeName];
+    if (firstNodeIcon) {
+      firstNodeIcon.scrollIntoView();
+    }  
+  })
 }
 
 generateTechTree(graphJson);
