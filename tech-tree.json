@@ -5,6 +5,7 @@
       "icon": "assets/ornament-gun.jpg",
       "display-name": "Christmas Ornament Gun",
       "blurb": "A gun shoots ornaments and sticks them on a christmas tree.",
+      "started": "1-12-2024",
       "completed": "1-13-2024"
     },
     "ornaments-are-platforms": {

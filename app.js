@@ -6,6 +6,7 @@ const startButton = document.querySelector(".start-btn");
 const DEFAULT_ICON = "assets/default-icon.png";
 const LOCK_ICON = "assets/lock.png";
 const UNKNOWN_ICON = "assets/question-mark.png";
+const IN_PROGRESS_ICON = "assets/hourglass.png";
 
 const UNKNOWN_INDEX = 2; // completionIndex at which nodes are marked unknown instead of just locked
 // completionIndex=0 for nodes that are completed; completionIndex=1 for nodes that have a completed dependency; etc etc
@@ -152,13 +153,14 @@ function generateTechTree(techTreeJson) {
       const nodeName = rowIndexToNodes[i][j];
       const completionIndex = nodeToCompletionIndex[nodeName];
       const upgrade = techTreeUpgrades[nodeName];
+      const isInProgress = (upgrade.started != null);
 
       // appearance varies depending on completionIndex
       var displayedImg;
       if (completionIndex >= UNKNOWN_INDEX) {
         displayedImg = UNKNOWN_ICON;
       } else if (completionIndex >= 1) {
-        displayedImg = LOCK_ICON;
+        displayedImg = isInProgress ? IN_PROGRESS_ICON : LOCK_ICON;
       } else {
         displayedImg = upgrade.icon || DEFAULT_ICON;
       }
