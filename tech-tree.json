@@ -68,7 +68,8 @@
       "dependencies": ["first-level"],
       "icon": "assets/golf.png",
       "display-name": "Ornament Golf",
-      "blurb": "Climb the tree using as few ornaments as possible"
+      "blurb": "Climb the tree using as few ornaments as possible",
+      "started": "1-17-2024"
     }
   },
   "progression": {
