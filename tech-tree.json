@@ -12,7 +12,8 @@
       "dependencies": ["shoot-ornaments"],
       "icon": "assets/platform.png",
       "display-name": "Ornaments Are Platforms",
-      "blurb": "The ornaments can be jumped on by players"
+      "blurb": "The ornaments can be jumped on by players",
+      "completed": "1-14-2024"
     },
     "obstacle-gun": {
       "dependencies": ["spikes", "walls"],
@@ -26,13 +27,15 @@
       "dependencies": ["first-level"],
       "icon": "assets/spiky-ball.jpg",
       "display-name": "Dangerous Spikes",
-      "blurb": "Spikes hurt players upon touch"
+      "blurb": "Spikes hurt players upon touch",
+      "started": "1-17-2024"
     },
     "walls": {
       "dependencies": ["first-level"],
       "icon": "assets/brick-wall.jpg",
       "display-name": "Breakable Walls",
-      "blurb": "Walls prevent players from moving up the tree and can be broken with ornaments"
+      "blurb": "Walls prevent players from moving up the tree and can be broken with ornaments",
+      "completed": "1-16-2024"
     },
     "save-checkpoints": {
       "dependencies": ["first-level"],
@@ -45,7 +48,8 @@
       "dependencies": ["ornaments-are-platforms"],
       "icon": "assets/christmas-tree.jpg",
       "display-name": "The First Level",
-      "blurb": "Players must climb a christmas tree using only the ornaments from their gun and their wits"
+      "blurb": "Players must climb a christmas tree using only the ornaments from their gun and their wits",
+      "completed": "1-15-2024"
     },
     "team-deathmatch": {
       "dependencies": ["obstacle-gun"],
@@ -57,7 +61,8 @@
       "dependencies": ["first-level"],
       "icon": "assets/volcano.jpg",
       "display-name": "The Floor Is Lava",
-      "blurb": "Players must scramble up the tree before melting in quickly rising lava"
+      "blurb": "Players must scramble up the tree before melting in quickly rising lava",
+      "completed": "1-16-2024"
     },
     "golf": {
       "dependencies": ["first-level"],
