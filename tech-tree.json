@@ -1,121 +1,41 @@
 {
-  "ornament-gun": {
-    "shoot-ornaments": {
+  "category": {
+    "platform-gun": {
       "dependencies": [],
-      "icon": "assets/ornament-gun.jpg",
-      "display-name": "Christmas Ornament Gun",
-      "blurb": "A gun shoots ornaments and sticks them on a christmas tree.",
-      "started": "1-12-2024",
-      "completed": "1-13-2024"
-    },
-    "ornaments-are-platforms": {
-      "dependencies": ["shoot-ornaments"],
+      "display-name": "A Gun That Shoots Platforms",
+      "blurb": "Shoot platforms on the wall that anyone can stand on; shooting platforms at players flings them",
       "icon": "assets/platform.png",
-      "display-name": "Ornaments Are Platforms",
-      "blurb": "The ornaments can be jumped on by players"
+      "completed": "yes"
     },
-    "obstacle-gun": {
-      "dependencies": ["spikes", "walls"],
-      "icon": "assets/obstacle-gun.jpg",
-      "display-name": "Guns That Shoot Obstacles",
-      "blurb": "A variant of the ornament gun shoots spikes, walls, etc."
-    }
-  },
-  "obstacles": {
-    "spikes": {
-      "dependencies": ["first-level"],
-      "icon": "assets/spiky-ball.jpg",
-      "display-name": "Dangerous Spikes",
-      "blurb": "Spikes hurt players upon touch"
+    "platform-forcefield": {
+      "dependencies": ["platform-gun"],
+      "display-name": "Platforms bounce off players with forcefields",
+      "blurb": "(to prevent flinging players)",
+      "completed": "yes"
     },
-    "walls": {
-      "dependencies": ["first-level"],
-      "icon": "assets/brick-wall.jpg",
-      "display-name": "Breakable Walls",
-      "blurb": "Walls prevent players from moving up the tree and can be broken with ornaments"
+    "level-design": {
+      "dependencies": [],
+      "display-name": "Rudimentary Map Layout",
+      "blurb": "A wall to climb, a platform to shoot from, starting spawn locations, a finish line, a button to dump the other team, lava",
+      "completed": "yes"
     },
-    "save-checkpoints": {
-      "dependencies": ["first-level"],
-      "display-name": "Save Checkpoints",
-      "blurb": "Players touch a checkpoint to respawn there if they die"
-    }
-  },
-  "level-design": {
-    "first-level": {
-      "dependencies": ["ornaments-are-platforms"],
-      "icon": "assets/christmas-tree.jpg",
-      "display-name": "The First Level",
-      "blurb": "Players must climb a christmas tree using only the ornaments from their gun and their wits"
+    "lava": {
+      "dependencies": [],
+      "display-name": "Touching lava hurts",
+      "blurb": "Players that touch lava parts take damage",
+      "completed": "yes"
     },
-    "team-deathmatch": {
-      "dependencies": ["obstacle-gun"],
-      "icon": "assets/team-deathmatch.jpg",
-      "display-name": "Climbers vs Opponents",
-      "blurb": "One team climbs the tree, the other team places obstacles in their path"
+    "rising-lava": {
+      "dependencies": ["lava", "level-design"],
+      "display-name": "Lava rises",
+      "blurb": "after a grace period, lava rises at a constant rate",
+      "completed": "yes"
     },
-    "floor-is-lava": {
-      "dependencies": ["first-level"],
-      "icon": "assets/volcano.jpg",
-      "display-name": "The Floor Is Lava",
-      "blurb": "Players must scramble up the tree before melting in quickly rising lava"
-    },
-    "golf": {
-      "dependencies": ["first-level"],
-      "icon": "assets/golf.png",
-      "display-name": "Ornament Golf",
-      "blurb": "Climb the tree using as few ornaments as possible"
-    }
-  },
-  "progression": {
-    "collectible-items": {
-      "dependencies": ["first-level"],
-      "icon": "assets/mario-star.jpg",
-      "display-name": "Points for Collecting Items",
-      "blurb": "Players earn points for picking up rare items"
-    },
-    "points-for-blocking": {
-      "dependencies": ["team-deathmatch"],
-      "icon": "assets/block.jpg",
-      "display-name": "Points for Blocking",
-      "blurb": "Players earn points for preventing opponents from climbing"
-    }
-  },
-  "sfx": {
-    "game-music": {
-      "dependencies": ["first-level"],
-      "icon": "assets/jukebox.jpg",
-      "display-name": "Fill the Silence",
-      "blurb": "Festive music plays during the game"
-    },
-    "custom-music": {
-      "dependencies": ["game-music"],
-      "icon": "assets/beethoven.jpg",
-      "display-name": "Compose a custom soundtrack",
-      "blurb": "Write and perform original music for the game"
-    }
-  },
-  "advertising": {
-    "basic-icon": {
-      "dependencies": ["first-level"],
-      "icon": "assets/icon.png",
-      "display-name": "Game Icon",
-      "blurb": "Make the game visible/advertisable to ROBLOX users"
-    }
-  },
-  "art": {
-    "define-art-style": {
-      "dependencies": ["points-for-blocking"],
-      "icon": "assets/starry-night.jpg",
-      "display-name": "Curate a Consistent Art Style",
-      "blurb": "Carefully select in-game props and meshes to adhere to a festive theme"
-    }
-  },
-  "lobby": {
-    "vote-next-round": {
-      "dependencies": ["team-deathmatch", "golf", "floor-is-lava"],
-      "icon": "assets/congress.jpg",
-      "display-name": "Vote Next Round",
-      "blurb": "Players decide which game mode to play for the next round"
+    "platform-drops": {
+      "dependencies": ["platform-gun"],
+      "display-name": "Platform Ammo Can Be Picked Up And Stored",
+      "blurb": "",
+      "completed": "yes"
     }
   }
 }
