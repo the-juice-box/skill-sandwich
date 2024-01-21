@@ -1,41 +1,71 @@
 {
   "category": {
-    "platform-gun": {
+    "agree-to-make-a-game": {
       "dependencies": [],
+      "display-name": "Agree To Make A Game",
+      "blurb": "Manipulate friend into starting a new project",
+      "icon": "assets/michael-cera.jpg",
+      "completed": "12-2024"
+    },
+    "platform-gun": {
+      "dependencies": ["agree-to-make-a-game"],
       "display-name": "A Gun That Shoots Platforms",
       "blurb": "Shoot platforms on the wall that anyone can stand on; shooting platforms at players flings them",
-      "icon": "assets/platform.png",
-      "completed": "yes"
+      "icon": "assets/platform.png"
+    },
+    "level-design": {
+      "dependencies": ["agree-to-make-a-game"],
+      "display-name": "Rudimentary Map Layout",
+      "blurb": "A wall to climb, a platform to shoot from, starting spawn locations, a finish line, a button to dump the other team, lava",
+      "icon": "assets/treasure-map.png"
+    },
+    "lava": {
+      "dependencies": ["agree-to-make-a-game"],
+      "display-name": "Touching lava hurts",
+      "blurb": "Players that touch lava parts take damage",
+      "icon": "assets/lava.jpg"
     },
     "platform-forcefield": {
       "dependencies": ["platform-gun"],
       "display-name": "Platforms bounce off players with forcefields",
       "blurb": "(to prevent flinging players)",
-      "completed": "yes"
-    },
-    "level-design": {
-      "dependencies": [],
-      "display-name": "Rudimentary Map Layout",
-      "blurb": "A wall to climb, a platform to shoot from, starting spawn locations, a finish line, a button to dump the other team, lava",
-      "completed": "yes"
-    },
-    "lava": {
-      "dependencies": [],
-      "display-name": "Touching lava hurts",
-      "blurb": "Players that touch lava parts take damage",
-      "completed": "yes"
-    },
-    "rising-lava": {
-      "dependencies": ["lava", "level-design"],
-      "display-name": "Lava rises",
-      "blurb": "after a grace period, lava rises at a constant rate",
-      "completed": "yes"
+      "icon": "assets/forcefield.jpg"
     },
     "platform-drops": {
       "dependencies": ["platform-gun"],
       "display-name": "Platform Ammo Can Be Picked Up And Stored",
       "blurb": "",
-      "completed": "yes"
+      "icon": "assets/ammo.png"
+    },
+    "platform-destruct-button": {
+      "dependencies": ["platform-gun"],
+      "display-name": "Big Red Button",
+      "blurb": "A button destroys other team's platforms so they fall into the lava",
+      "icon": "assets/red-button.jpg"
+    },
+    "rising-lava": {
+      "dependencies": ["lava", "level-design"],
+      "display-name": "Lava rises",
+      "blurb": "after a grace period, lava rises at a constant rate",
+      "icon": "assets/volcano.jpg"
+    },
+    "round-system": {
+      "dependencies": ["rising-lava", "platform-drops", "platform-destruct-button"],
+      "display-name": "Round System",
+      "blurb": "Players are split into teams, the lava resets, everyone spawns into the game, dead people spawn in a lobby, ",
+      "icon": "assets/recycle.png"
+    },
+    "points-system": {
+      "dependencies": ["round-system"],
+      "display-name": "Points System",
+      "blurb": "Players earn points for winning",
+      "icon": "assets/leaderboard.png"
+    },
+    "playtest": {
+      "dependencies": ["points-system"],
+      "display-name": "Test The Game With Friends",
+      "blurb": "Is it fun?",
+      "icon": "assets/activision.png"
     }
   }
 }
