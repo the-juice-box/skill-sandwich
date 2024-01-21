@@ -11,7 +11,8 @@
       "dependencies": ["agree-to-make-a-game"],
       "display-name": "A Gun That Shoots Platforms",
       "blurb": "Shoot platforms on the wall that anyone can stand on; shooting platforms at players flings them",
-      "icon": "assets/platform.png"
+      "icon": "assets/platform.png",
+      "started": "1-21-2024"
     },
     "level-design": {
       "dependencies": ["agree-to-make-a-game"],
