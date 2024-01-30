@@ -18,7 +18,9 @@
       "dependencies": ["agree-to-make-a-game"],
       "display-name": "Rudimentary Map Layout",
       "blurb": "A wall to climb, a platform to shoot from, starting spawn locations, a finish line, a button to dump the other team, lava",
-      "icon": "assets/treasure-map.png"
+      "icon": "assets/treasure-map.png",
+      "started": "1-30-2024",
+      "completed": "1-30-2024"
     },
     "lava": {
       "dependencies": ["agree-to-make-a-game"],
