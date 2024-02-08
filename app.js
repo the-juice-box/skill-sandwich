@@ -1,8 +1,9 @@
-import graphJson from "./tech-tree.json" assert { type: "json" };
+// import graphJson from "./tech-tree.json" assert { type: "json" }; // this isn't supported by Mozilla FireFox or Safari
 const techTreeContainer = document.querySelector(".tech-tree");
 const techTreeEdgesContainer = document.querySelector(".tech-tree-edges");
 const startButton = document.querySelector(".start-btn");
 
+const TECH_TREE_FILE = "./tech-tree.json";
 const DEFAULT_ICON = "assets/default-icon.png";
 const LOCK_ICON = "assets/lock.png";
 const UNKNOWN_ICON = "assets/question-mark.png";
@@ -10,8 +11,13 @@ const IN_PROGRESS_ICON = "assets/in-progress.png";
 
 const UNKNOWN_INDEX = 2; // completionIndex at which nodes are marked unknown instead of just locked
 // completionIndex=0 for nodes that are completed; completionIndex=1 for nodes that have a completed dependency; etc etc
+const FORCE_DISPLAY_ICONS = false; // set to false for lock icons
+
 const BIG_NUMBER = 10 ^ 6; // completion index can't be bigger than this... idk how javascript works yet lol
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 function unpackGraphDependencies(dependencies) {
   // @return: Array rowIndexToNodes (int rowIndex --> [ string nodeName ])
   // @return: Object nodeToRowIndex (string nodeName --> int rowIndex)
@@ -62,7 +68,6 @@ function unpackGraphDependencies(dependencies) {
 
   return [rowIndexToNodes, nodeToRowIndex];
 }
-
 function unpackGraphCompletion(techTreeUpgrades) {
   const nodeToCompletionIndex = {};
 
@@ -153,23 +158,38 @@ function generateTechTree(techTreeJson) {
       const nodeName = rowIndexToNodes[i][j];
       const completionIndex = nodeToCompletionIndex[nodeName];
       const upgrade = techTreeUpgrades[nodeName];
-      const isInProgress = (upgrade.started != null);
+      const isInProgress = upgrade.started != null;
+      const link = upgrade.link;
+      const linkText = upgrade["link-text"];
+      const linksDictionary = upgrade.links;
 
       // appearance varies depending on completionIndex
       var displayedImg;
-      if (completionIndex >= UNKNOWN_INDEX) {
-        displayedImg = UNKNOWN_ICON;
-      } else if (completionIndex >= 1) {
-        displayedImg = isInProgress ? IN_PROGRESS_ICON : LOCK_ICON;
-      } else {
+      if (FORCE_DISPLAY_ICONS || completionIndex <= 0) {
         displayedImg = upgrade.icon || DEFAULT_ICON;
+      }
+      else if (completionIndex < UNKNOWN_INDEX) {
+        displayedImg = isInProgress ? IN_PROGRESS_ICON : LOCK_ICON;
+      }
+      else {
+        displayedImg = UNKNOWN_ICON;
       }
 
       var displayText = "";
       if (completionIndex < UNKNOWN_INDEX) {
         const displayName = upgrade["display-name"] || nodeName;
-        const blurb = upgrade.blurb || ""; 
-        displayText = "<h3>" + displayName + "</h3>" + blurb;
+        const blurb = upgrade.blurb || "";
+        displayText = "<h3>" + displayName + "</h3><p>" + blurb + "</p>";
+
+        if (linksDictionary) {
+          for (var thisLinkText in linksDictionary) {
+            const href = linksDictionary[thisLinkText];
+            displayText += '<a href="' + href + '">' + thisLinkText + "</a><br>";
+          }
+        }
+        if (link) {
+          displayText += '<a href="' + link + '">' + (linkText || link) + "</a>";
+        }
       }
 
       // create node element
@@ -252,13 +272,28 @@ function generateTechTree(techTreeJson) {
   onScreenResize();
 
   // support "back to start" button
-  startButton.addEventListener("click", function () {
+  function backToStart() {
     const firstNodeName = rowIndexToNodes[0][0];
     const firstNodeIcon = nodeIcons[firstNodeName];
     if (firstNodeIcon) {
-      firstNodeIcon.scrollIntoView();
+      firstNodeIcon.scrollIntoView({
+        block: "center",
+        inline: "center",
+      });
     }
-  });
+  }
+  startButton.addEventListener("click", backToStart);
+
+  // automatically scroll to start on load page
+  sleep(500).then(backToStart);
 }
 
-generateTechTree(graphJson);
+// load tech tree from JSON file
+fetch(TECH_TREE_FILE)
+  .then(function (response) {
+    if (!response.ok) {
+      throw new Error("HTTP error " + response.status);
+    }
+    return response.json();
+  })
+  .then(generateTechTree);
