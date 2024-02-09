@@ -52,7 +52,8 @@
       "dependencies": ["lava", "level-design"],
       "display-name": "Lava rises",
       "blurb": "after a grace period, lava rises at a constant rate",
-      "icon": "assets/volcano.jpg"
+      "icon": "assets/volcano.jpg",
+      "started": "2-8-2024"
     },
     "round-system": {
       "dependencies": ["rising-lava", "platform-drops", "platform-destruct-button"],
